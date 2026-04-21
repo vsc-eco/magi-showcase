@@ -64,3 +64,24 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	border-radius: 6px;
 }
 .hero-cta:hover { text-decoration: none; background: var(--magi-accent-hover, #4f46e5); }
+
+.features-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+}
+.feature-card {
+	padding: 20px;
+	background: var(--magi-field-bg, #1a1d24);
+	border: 1px solid var(--magi-field-border, #2a2f3a);
+	border-radius: 8px;
+}
+.feature-card h3 {
+	font-size: 16px;
+	margin-bottom: 8px;
+}
+.feature-card p {
+	margin: 0;
+	font-size: 14px;
+	color: var(--magi-text-secondary, #9ca3af);
+}
