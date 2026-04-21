@@ -1,0 +1,17 @@
+<!-- Drop into any HTML page — no framework required beyond the import. -->
+<script type="module">
+	import '@magi/widget/webcomponent';
+</script>
+
+<magi-quickswap id="swap"></magi-quickswap>
+
+<script>
+	// Object props MUST be set as JS properties, not HTML attributes —
+	// the widget expects live Aioha / function references, which can't
+	// round-trip through attributes.
+	const el = document.getElementById('swap');
+	el.aioha = yourAiohaInstance;
+	el.username = 'lordbutterfly';
+	el.keyType = 'active';
+	el.onSuccess = (txId) => console.log('Swap broadcast:', txId);
+</script>
