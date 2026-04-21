@@ -1,0 +1,43 @@
+:root {
+	color-scheme: dark;
+	font-family: var(--magi-font, 'Inter', system-ui, sans-serif);
+	background: var(--magi-card-bg, #0f1115);
+	color: var(--magi-text, #e5e7eb);
+}
+
+body {
+	margin: 0;
+	background: var(--magi-card-bg, #0f1115);
+}
+
+main {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 48px 24px 80px;
+}
+
+section {
+	margin: 48px 0;
+}
+
+h1, h2, h3 {
+	color: var(--magi-text, #e5e7eb);
+	margin: 0 0 16px;
+}
+
+a {
+	color: var(--magi-accent, #6366f1);
+	text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+button {
+	font: inherit;
+	cursor: pointer;
+	background: var(--magi-accent, #6366f1);
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	padding: 8px 16px;
+}
+button:hover { background: var(--magi-accent-hover, #4f46e5); }
