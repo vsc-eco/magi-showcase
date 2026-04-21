@@ -1,13 +1,31 @@
+/* Altera dashboard palette — matches altera-app's body chrome, not the
+   widget card itself. The widget's own altera-dark theme (scoped to
+   .magi-quickswap) provides the glassmorphism card look that sits on
+   top of this background. */
 :root {
 	color-scheme: dark;
-	font-family: var(--magi-font, 'Inter', system-ui, sans-serif);
-	background: var(--magi-card-bg, #0f1115);
-	color: var(--magi-text, #e5e7eb);
+
+	--page-bg: #0a0a12;
+	--page-surface: #111119;
+	--page-card-bg: #1a1a25;
+	--page-card-border: #252533;
+	--page-field-bg: #12121c;
+	--page-field-border: #2a2a3a;
+	--page-divider: #1f1f2e;
+	--page-text: #ffffff;
+	--page-text-secondary: #9ca3af;
+	--page-text-muted: #6b7280;
+	--page-accent: #6c5ce7;
+	--page-accent-hover: #7c6ef7;
+
+	font-family: 'Nunito Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+	background: var(--page-bg);
+	color: var(--page-text);
 }
 
 body {
 	margin: 0;
-	background: var(--magi-card-bg, #0f1115);
+	background: var(--page-bg);
 }
 
 main {
@@ -21,12 +39,12 @@ section {
 }
 
 h1, h2, h3 {
-	color: var(--magi-text, #e5e7eb);
+	color: var(--page-text);
 	margin: 0 0 16px;
 }
 
 a {
-	color: var(--magi-accent, #6366f1);
+	color: var(--page-accent);
 	text-decoration: none;
 }
 a:hover { text-decoration: underline; }
@@ -34,13 +52,19 @@ a:hover { text-decoration: underline; }
 button {
 	font: inherit;
 	cursor: pointer;
-	background: var(--magi-accent, #6366f1);
+	background: var(--page-accent);
 	color: #fff;
 	border: none;
 	border-radius: 6px;
 	padding: 8px 16px;
 }
-button:hover { background: var(--magi-accent-hover, #4f46e5); }
+button:hover { background: var(--page-accent-hover); }
+
+/* Center the swap card inside its section (widget is max-width: 420px). */
+.live-widget .magi-quickswap {
+	margin-left: auto;
+	margin-right: auto;
+}
 
 .hero {
 	padding-top: 32px;
@@ -52,18 +76,18 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 }
 .hero-tagline {
 	font-size: 18px;
-	color: var(--magi-text-secondary, #9ca3af);
+	color: var(--page-text-secondary);
 	max-width: 560px;
 	margin: 0 auto 24px;
 }
 .hero-cta {
 	display: inline-block;
 	padding: 10px 20px;
-	background: var(--magi-accent, #6366f1);
+	background: var(--page-accent);
 	color: #fff;
 	border-radius: 6px;
 }
-.hero-cta:hover { text-decoration: none; background: var(--magi-accent-hover, #4f46e5); }
+.hero-cta:hover { text-decoration: none; background: var(--page-accent-hover); }
 
 .features-grid {
 	display: grid;
@@ -72,8 +96,8 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 }
 .feature-card {
 	padding: 20px;
-	background: var(--magi-field-bg, #1a1d24);
-	border: 1px solid var(--magi-field-border, #2a2f3a);
+	background: var(--page-card-bg);
+	border: 1px solid var(--page-card-border);
 	border-radius: 8px;
 }
 .feature-card h3 {
@@ -83,7 +107,7 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 .feature-card p {
 	margin: 0;
 	font-size: 14px;
-	color: var(--magi-text-secondary, #9ca3af);
+	color: var(--page-text-secondary);
 }
 
 .connect-bar {
@@ -91,21 +115,26 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	align-items: center;
 	gap: 12px;
 	padding: 10px 14px;
-	background: var(--magi-field-bg, #1a1d24);
-	border: 1px solid var(--magi-field-border, #2a2f3a);
+	background: var(--page-surface);
+	border: 1px solid var(--page-card-border);
 	border-radius: 6px;
 	margin-bottom: 16px;
 	font-size: 14px;
 	flex-wrap: wrap;
+	max-width: 420px;
+	margin-left: auto;
+	margin-right: auto;
 }
-.connect-bar__label { color: var(--magi-text-secondary, #9ca3af); }
+.connect-bar__label { color: var(--page-text-secondary); }
 .connect-bar__user { font-size: 13px; }
-.connect-bar__network { margin-left: auto; color: var(--magi-text-muted, #6b7280); }
+.connect-bar__network { margin-left: auto; color: var(--page-text-muted); }
 
+.live-widget { text-align: center; }
+.live-widget h2 { text-align: center; }
 .live-widget__notice {
 	margin-top: 12px;
 	font-size: 13px;
-	color: var(--magi-text-muted, #6b7280);
+	color: var(--page-text-muted);
 	text-align: center;
 }
 .live-widget__tx { font-size: 13px; }
@@ -113,32 +142,33 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 .footer {
 	margin-top: 80px;
 	padding-top: 24px;
-	border-top: 1px solid var(--magi-field-border, #2a2f3a);
+	border-top: 1px solid var(--page-divider);
 	text-align: center;
 }
 .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
 .footer-note {
 	margin-top: 16px;
 	font-size: 13px;
-	color: var(--magi-text-muted, #6b7280);
+	color: var(--page-text-muted);
 }
 
 .integrate-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
 .integrate-tab {
-	background: var(--magi-field-bg, #1a1d24);
-	color: var(--magi-text-secondary, #9ca3af);
-	border: 1px solid var(--magi-field-border, #2a2f3a);
+	background: var(--page-card-bg);
+	color: var(--page-text-secondary);
+	border: 1px solid var(--page-card-border);
 	border-radius: 6px;
 	padding: 6px 14px;
 	font-size: 14px;
 }
-.integrate-tab.active { background: var(--magi-accent, #6366f1); color: #fff; }
-.integrate-blurb { color: var(--magi-text-secondary, #9ca3af); font-size: 14px; }
+.integrate-tab.active { background: var(--page-accent); color: #fff; border-color: var(--page-accent); }
+.integrate-blurb { color: var(--page-text-secondary); font-size: 14px; }
 .integrate-snippet {
 	position: relative;
 	border-radius: 8px;
 	overflow: hidden;
 	background: #0d1117;
+	border: 1px solid var(--page-card-border);
 }
 .integrate-snippet pre { margin: 0; padding: 16px; font-size: 13px; overflow-x: auto; }
 .integrate-copy {
@@ -147,7 +177,7 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	right: 8px;
 	font-size: 12px;
 	padding: 4px 10px;
-	background: var(--magi-field-bg, #1a1d24);
-	color: var(--magi-text, #e5e7eb);
-	border: 1px solid var(--magi-field-border, #2a2f3a);
+	background: var(--page-field-bg);
+	color: var(--page-text);
+	border: 1px solid var(--page-card-border);
 }
