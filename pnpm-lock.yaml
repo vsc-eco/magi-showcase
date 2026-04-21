@@ -574,7 +574,7 @@ packages:
         optional: true
 
   '@magi/widget@file:vendor/magi-widget-0.0.1.tgz':
-    resolution: {integrity: sha512-FavVWKv82ttbk2V0OqQ/GJj5JyV3bVrtRTdxv+6y5iFkjYDQWQv2eRKyFUDX+tHi/jk7Gcv5e+nNSxS5Uz/gBA==, tarball: file:vendor/magi-widget-0.0.1.tgz}
+    resolution: {integrity: sha512-E6uR+bKO0nFoDo5rxINGUM+5dvFEe8VVlRckF/zFV8CId/eEPnHkrC9/ur98MieGzyUh0sxlnBgN9NjpNW7Cyw==, tarball: file:vendor/magi-widget-0.0.1.tgz}
     version: 0.0.1
     peerDependencies:
       '@aioha/aioha': ^1.8.0

@@ -48,6 +48,29 @@ for pkg in core sdk widget; do
 	(cd "$ALTERA/packages/$pkg" && pnpm pack --pack-destination "$SHOWCASE_ROOT/vendor")
 done
 
+# Patch the widget tarball: tsup's --loader .css=copy emits hashed CSS
+# (styles-HASH.css) and does not emit src/themes/*.css at all, but the
+# widget's package.json exports declare ./styles.css and
+# ./themes/altera-dark.css as stable subpaths. Create those stable
+# aliases inside the tarball so consumers can import the paths the
+# exports field actually advertises. Remove once the widget build in
+# altera-app emits these files itself.
+echo "[pack-sdk] patching widget tarball (adding stable CSS entry points)"
+WIDGET_TGZ="$(ls "$SHOWCASE_ROOT/vendor/magi-widget-"*.tgz)"
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"; git -C "$ALTERA" checkout -q "$ORIGINAL_BRANCH" || true' EXIT
+tar -xzf "$WIDGET_TGZ" -C "$WORK"
+HASHED_CSS="$(ls "$WORK/package/dist/"styles-*.css 2>/dev/null | head -1 || true)"
+if [[ -z "$HASHED_CSS" ]]; then
+	echo "error: widget tarball contains no dist/styles-*.css" >&2
+	exit 1
+fi
+cp "$HASHED_CSS" "$WORK/package/dist/styles.css"
+mkdir -p "$WORK/package/dist/themes"
+cp "$ALTERA/packages/widget/src/themes/altera-dark.css" \
+	"$WORK/package/dist/themes/altera-dark.css"
+(cd "$WORK" && tar -czf "$WIDGET_TGZ" package)
+
 echo "[pack-sdk] vendor/ contents:"
 ls -la "$SHOWCASE_ROOT/vendor/"
 
