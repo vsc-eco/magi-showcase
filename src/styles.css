@@ -6,17 +6,29 @@
 	color-scheme: dark;
 
 	--page-bg: #0a0a12;
-	--page-surface: #111119;
-	--page-card-bg: #1a1a25;
-	--page-card-border: #252533;
-	--page-field-bg: #12121c;
-	--page-field-border: #2a2a3a;
-	--page-divider: #1f1f2e;
 	--page-text: #ffffff;
 	--page-text-secondary: #9ca3af;
 	--page-text-muted: #6b7280;
 	--page-accent: #6c5ce7;
 	--page-accent-hover: #7c6ef7;
+
+	/* Glass chrome — mirrors altera-app's --dash-card-* vars. */
+	--glass-bg: linear-gradient(
+		135deg,
+		rgba(255, 255, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0.05) 100%
+	);
+	--glass-bg-hover: linear-gradient(
+		135deg,
+		rgba(255, 255, 255, 0.14) 0%,
+		rgba(255, 255, 255, 0.08) 100%
+	);
+	--glass-border: rgba(255, 255, 255, 0.15);
+	--glass-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.3),
+		inset 0 1px 1px rgba(255, 255, 255, 0.3),
+		inset 1px 0 1px rgba(255, 255, 255, 0.15),
+		inset 0 -1px 1px rgba(0, 0, 0, 0.2);
 
 	font-family: 'Nunito Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 	background: var(--page-bg);
@@ -26,6 +38,25 @@
 body {
 	margin: 0;
 	background: var(--page-bg);
+	min-height: 100vh;
+	position: relative;
+}
+
+/* Blueish radial gradient wash — mirrors altera-app's authed layout bg.
+   Fixed + pointer-events-none so it never interferes with content. */
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background:
+		radial-gradient(ellipse at 15% 10%, hsla(243, 90%, 65%, 0.35) 0px, transparent 40%),
+		radial-gradient(ellipse at 80% 8%, hsla(238, 60%, 55%, 0.2) 0px, transparent 38%),
+		radial-gradient(ellipse at 88% 50%, hsla(235, 50%, 50%, 0.15) 0px, transparent 40%),
+		radial-gradient(ellipse at 5% 70%, hsla(245, 70%, 55%, 0.2) 0px, transparent 35%),
+		radial-gradient(ellipse at 50% 35%, hsla(230, 50%, 40%, 0.15) 0px, transparent 45%),
+		radial-gradient(ellipse at 75% 80%, hsla(240, 50%, 45%, 0.1) 0px, transparent 35%);
 }
 
 main {
@@ -96,9 +127,12 @@ button:hover { background: var(--page-accent-hover); }
 }
 .feature-card {
 	padding: 20px;
-	background: var(--page-card-bg);
-	border: 1px solid var(--page-card-border);
-	border-radius: 8px;
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	border-radius: 12px;
+	box-shadow: var(--glass-shadow);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
 }
 .feature-card h3 {
 	font-size: 16px;
@@ -115,15 +149,16 @@ button:hover { background: var(--page-accent-hover); }
 	align-items: center;
 	gap: 12px;
 	padding: 10px 14px;
-	background: var(--page-surface);
-	border: 1px solid var(--page-card-border);
-	border-radius: 6px;
-	margin-bottom: 16px;
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+	border-radius: 10px;
+	box-shadow: var(--glass-shadow);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	margin: 0 auto 16px;
 	font-size: 14px;
 	flex-wrap: wrap;
 	max-width: 420px;
-	margin-left: auto;
-	margin-right: auto;
 }
 .connect-bar__label { color: var(--page-text-secondary); }
 .connect-bar__user { font-size: 13px; }
@@ -141,11 +176,27 @@ button:hover { background: var(--page-accent-hover); }
 
 .footer {
 	margin-top: 80px;
-	padding-top: 24px;
-	border-top: 1px solid var(--page-divider);
+	padding-top: 32px;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
 	text-align: center;
 }
 .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.footer-attribution {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	margin-top: 24px;
+	color: var(--page-text-muted);
+	font-size: 13px;
+}
+.footer-attribution__logo {
+	height: 28px;
+	width: auto;
+	opacity: 0.85;
+	transition: opacity 0.15s ease;
+}
+.footer-attribution__logo:hover { opacity: 1; }
 .footer-note {
 	margin-top: 16px;
 	font-size: 13px;
@@ -154,30 +205,37 @@ button:hover { background: var(--page-accent-hover); }
 
 .integrate-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
 .integrate-tab {
-	background: var(--page-card-bg);
+	background: var(--glass-bg);
 	color: var(--page-text-secondary);
-	border: 1px solid var(--page-card-border);
-	border-radius: 6px;
+	border: 1px solid var(--glass-border);
+	border-radius: 8px;
 	padding: 6px 14px;
 	font-size: 14px;
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
 }
 .integrate-tab.active { background: var(--page-accent); color: #fff; border-color: var(--page-accent); }
 .integrate-blurb { color: var(--page-text-secondary); font-size: 14px; }
 .integrate-snippet {
 	position: relative;
-	border-radius: 8px;
+	border-radius: 12px;
 	overflow: hidden;
-	background: #0d1117;
-	border: 1px solid var(--page-card-border);
+	background: rgba(13, 17, 23, 0.6);
+	border: 1px solid var(--glass-border);
+	box-shadow: var(--glass-shadow);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
 }
-.integrate-snippet pre { margin: 0; padding: 16px; font-size: 13px; overflow-x: auto; }
+.integrate-snippet pre { margin: 0; padding: 16px; font-size: 13px; overflow-x: auto; background: transparent; }
 .integrate-copy {
 	position: absolute;
 	top: 8px;
 	right: 8px;
 	font-size: 12px;
 	padding: 4px 10px;
-	background: var(--page-field-bg);
+	background: rgba(255, 255, 255, 0.08);
 	color: var(--page-text);
-	border: 1px solid var(--page-card-border);
+	border: 1px solid var(--glass-border);
+	border-radius: 6px;
 }
+.integrate-copy:hover { background: rgba(255, 255, 255, 0.14); }
