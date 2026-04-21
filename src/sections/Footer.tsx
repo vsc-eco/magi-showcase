@@ -21,14 +21,14 @@ export function Footer() {
 				<a className="footer-button" href="#integrate">Integrate</a>
 			</div>
 			<div className="footer-attribution">
-				<a href="https://altera.okinoko.io" target="_blank" rel="noopener noreferrer">
+				<a href="https://altera.magi.eco" target="_blank" rel="noopener noreferrer">
 					<img
 						src="/altera.png"
 						alt="Altera"
 						className="footer-attribution__logo"
 					/>
 				</a>
-				<span>Theme borrowed from <a href="https://altera.okinoko.io" target="_blank" rel="noopener noreferrer">Altera</a>.</span>
+				<span>Theme borrowed from <a href="https://altera.magi.eco" target="_blank" rel="noopener noreferrer">Altera</a>.</span>
 			</div>
 			<p className="footer-note">Built on Magi (VSC).</p>
 		</footer>

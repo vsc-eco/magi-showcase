@@ -215,7 +215,9 @@ button:hover { background: var(--page-accent-hover); }
 	height: 28px;
 	width: auto;
 	opacity: 0.85;
-	transition: opacity 0.15s ease;
+	transition: opacity 0.15s ease, filter 0.15s ease;
+	/* Source asset is dark; invert to white for the dark background. */
+	filter: brightness(0) invert(1);
 }
 .footer-attribution__logo:hover { opacity: 1; }
 .footer-note {
