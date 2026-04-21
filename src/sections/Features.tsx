@@ -1,7 +1,7 @@
 const FEATURES = [
 	{
-		title: '6 swap paths',
-		body: 'HIVE, HBD, BTC — mainnet to mainnet. Magi L2 routes internally; users never see it.'
+		title: '6 swap paths today',
+		body: 'HIVE, HBD, BTC — mainnet to mainnet. Magi L2 routes internally; users never see it. More chains and assets landing soon.'
 	},
 	{
 		title: '4 integration modes',
