@@ -101,3 +101,11 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 .connect-bar__label { color: var(--magi-text-secondary, #9ca3af); }
 .connect-bar__user { font-size: 13px; }
 .connect-bar__network { margin-left: auto; color: var(--magi-text-muted, #6b7280); }
+
+.live-widget__notice {
+	margin-top: 12px;
+	font-size: 13px;
+	color: var(--magi-text-muted, #6b7280);
+	text-align: center;
+}
+.live-widget__tx { font-size: 13px; }
