@@ -2,17 +2,23 @@ export function Footer() {
 	return (
 		<footer id="footer" className="footer">
 			<div className="footer-links">
-				<a href="https://github.com/vsc-eco/altera-app" target="_blank" rel="noopener noreferrer">
+				<a
+					className="footer-button"
+					href="https://github.com/vsc-eco/altera-app"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					altera-app source
 				</a>
 				<a
+					className="footer-button"
 					href="https://github.com/vsc-eco/altera-app/blob/feature/magi-sdk/README.md"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
 					SDK README
 				</a>
-				<a href="#integrate">Integrate</a>
+				<a className="footer-button" href="#integrate">Integrate</a>
 			</div>
 			<div className="footer-attribution">
 				<a href="https://altera.okinoko.io" target="_blank" rel="noopener noreferrer">
