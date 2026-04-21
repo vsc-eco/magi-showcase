@@ -101,6 +101,19 @@ button:hover { background: var(--page-accent-hover); }
 	padding-top: 32px;
 	text-align: center;
 }
+.hero-title {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	margin-bottom: 16px;
+}
+.hero-title h1 { margin: 0; }
+.hero-logo {
+	height: 56px;
+	width: auto;
+	flex-shrink: 0;
+}
 .hero h1 {
 	font-size: 56px;
 	letter-spacing: -0.02em;
