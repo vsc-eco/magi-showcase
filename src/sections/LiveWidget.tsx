@@ -10,7 +10,7 @@ import { ConnectBar } from './ConnectBar';
 const SHOWCASE_CONFIG = {
 	...MAINNET_CONFIG,
 	referral: {
-		beneficiary: 'hive:alter.app',
+		beneficiary: 'hive:altera.app',
 		bps: 25
 	}
 };
