@@ -41,3 +41,26 @@ button {
 	padding: 8px 16px;
 }
 button:hover { background: var(--magi-accent-hover, #4f46e5); }
+
+.hero {
+	padding-top: 32px;
+	text-align: center;
+}
+.hero h1 {
+	font-size: 56px;
+	letter-spacing: -0.02em;
+}
+.hero-tagline {
+	font-size: 18px;
+	color: var(--magi-text-secondary, #9ca3af);
+	max-width: 560px;
+	margin: 0 auto 24px;
+}
+.hero-cta {
+	display: inline-block;
+	padding: 10px 20px;
+	background: var(--magi-accent, #6366f1);
+	color: #fff;
+	border-radius: 6px;
+}
+.hero-cta:hover { text-decoration: none; background: var(--magi-accent-hover, #4f46e5); }
