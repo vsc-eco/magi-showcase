@@ -85,3 +85,19 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	font-size: 14px;
 	color: var(--magi-text-secondary, #9ca3af);
 }
+
+.connect-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	background: var(--magi-field-bg, #1a1d24);
+	border: 1px solid var(--magi-field-border, #2a2f3a);
+	border-radius: 6px;
+	margin-bottom: 16px;
+	font-size: 14px;
+	flex-wrap: wrap;
+}
+.connect-bar__label { color: var(--magi-text-secondary, #9ca3af); }
+.connect-bar__user { font-size: 13px; }
+.connect-bar__network { margin-left: auto; color: var(--magi-text-muted, #6b7280); }
