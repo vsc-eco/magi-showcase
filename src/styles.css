@@ -109,3 +109,16 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	text-align: center;
 }
 .live-widget__tx { font-size: 13px; }
+
+.footer {
+	margin-top: 80px;
+	padding-top: 24px;
+	border-top: 1px solid var(--magi-field-border, #2a2f3a);
+	text-align: center;
+}
+.footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.footer-note {
+	margin-top: 16px;
+	font-size: 13px;
+	color: var(--magi-text-muted, #6b7280);
+}
