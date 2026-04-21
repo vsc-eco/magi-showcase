@@ -14,8 +14,19 @@
     "sync-snippets": "tsx scripts/sync-snippets.ts"
   },
   "dependencies": {
+    "@aioha/aioha": "^1.8.2",
+    "@magi/core": "file:vendor/magi-core-0.0.1.tgz",
+    "@magi/sdk": "file:vendor/magi-sdk-0.0.1.tgz",
+    "@magi/widget": "file:vendor/magi-widget-0.0.1.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "@magi/core": "file:vendor/magi-core-0.0.1.tgz",
+      "@magi/sdk": "file:vendor/magi-sdk-0.0.1.tgz",
+      "@magi/widget": "file:vendor/magi-widget-0.0.1.tgz"
+    }
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
