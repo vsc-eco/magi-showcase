@@ -1,6 +1,7 @@
 import { Hero } from './sections/Hero';
 import { Features } from './sections/Features';
 import { LiveWidget } from './sections/LiveWidget';
+import { Integrate } from './sections/Integrate';
 import { Footer } from './sections/Footer';
 
 export function App() {
@@ -9,7 +10,7 @@ export function App() {
 			<Hero />
 			<Features />
 			<LiveWidget />
-			<section id="integrate"><h2>Integrate</h2></section>
+			<Integrate />
 			<Footer />
 		</main>
 	);

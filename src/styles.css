@@ -122,3 +122,32 @@ button:hover { background: var(--magi-accent-hover, #4f46e5); }
 	font-size: 13px;
 	color: var(--magi-text-muted, #6b7280);
 }
+
+.integrate-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.integrate-tab {
+	background: var(--magi-field-bg, #1a1d24);
+	color: var(--magi-text-secondary, #9ca3af);
+	border: 1px solid var(--magi-field-border, #2a2f3a);
+	border-radius: 6px;
+	padding: 6px 14px;
+	font-size: 14px;
+}
+.integrate-tab.active { background: var(--magi-accent, #6366f1); color: #fff; }
+.integrate-blurb { color: var(--magi-text-secondary, #9ca3af); font-size: 14px; }
+.integrate-snippet {
+	position: relative;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #0d1117;
+}
+.integrate-snippet pre { margin: 0; padding: 16px; font-size: 13px; overflow-x: auto; }
+.integrate-copy {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	font-size: 12px;
+	padding: 4px 10px;
+	background: var(--magi-field-bg, #1a1d24);
+	color: var(--magi-text, #e5e7eb);
+	border: 1px solid var(--magi-field-border, #2a2f3a);
+}

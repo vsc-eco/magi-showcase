@@ -43,7 +43,11 @@ export function shikiHighlight(): Plugin {
 			const lang = LANG_BY_EXT[ext] ?? 'ts';
 			const source = await readFile(filePath, 'utf8');
 			const html = highlighter!.codeToHtml(source, { lang, theme: 'github-dark' });
-			return `export const source = ${JSON.stringify(source)};\nexport const html = ${JSON.stringify(html)};\n`;
+			return (
+				`export const source = ${JSON.stringify(source)};\n` +
+				`export const html = ${JSON.stringify(html)};\n` +
+				`export default { source, html };\n`
+			);
 		}
 	};
 }
