@@ -11,7 +11,10 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			// Prevent two React copies (see design doc §SDK consumption).
+			// Pin test-file react imports to the root copy. Duplicate
+			// React across @magi/widget is prevented by pnpm's default
+			// hoisting, not by this alias; the alias just keeps test
+			// code from drifting if something weird resolves react.
 			react: path.resolve(__dirname, 'node_modules/react'),
 			'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
 		}
