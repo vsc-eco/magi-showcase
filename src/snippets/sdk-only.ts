@@ -1,4 +1,4 @@
-import { CoinAmount, createMagi } from '@magi/sdk';
+import { CoinAmount, createMagi } from '@vsc.eco/crosschain-sdk';
 
 // Bring-your-own signer. The SDK builds the ops; you broadcast them
 // via whatever signing path your app already owns.

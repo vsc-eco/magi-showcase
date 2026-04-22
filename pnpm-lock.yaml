@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@magi/core': file:vendor/magi-core-0.0.1.tgz
-  '@magi/sdk': file:vendor/magi-sdk-0.0.1.tgz
-  '@magi/widget': file:vendor/magi-widget-0.0.1.tgz
+  '@vsc.eco/crosschain-core': link:../crosschain-sdk/packages/core
+  '@vsc.eco/crosschain-sdk': link:../crosschain-sdk/packages/sdk
+  '@vsc.eco/crosschain-widget': link:../crosschain-sdk/packages/widget
 
 importers:
 
@@ -16,15 +16,15 @@ importers:
       '@aioha/aioha':
         specifier: ^1.8.2
         version: 1.8.2(webextension-polyfill@0.12.0)
-      '@magi/core':
-        specifier: file:vendor/magi-core-0.0.1.tgz
-        version: file:vendor/magi-core-0.0.1.tgz
-      '@magi/sdk':
-        specifier: file:vendor/magi-sdk-0.0.1.tgz
-        version: file:vendor/magi-sdk-0.0.1.tgz(@aioha/aioha@1.8.2(webextension-polyfill@0.12.0))
-      '@magi/widget':
-        specifier: file:vendor/magi-widget-0.0.1.tgz
-        version: file:vendor/magi-widget-0.0.1.tgz(@aioha/aioha@1.8.2(webextension-polyfill@0.12.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@vsc.eco/crosschain-core':
+        specifier: link:../crosschain-sdk/packages/core
+        version: link:../crosschain-sdk/packages/core
+      '@vsc.eco/crosschain-sdk':
+        specifier: link:../crosschain-sdk/packages/sdk
+        version: link:../crosschain-sdk/packages/sdk
+      '@vsc.eco/crosschain-widget':
+        specifier: link:../crosschain-sdk/packages/widget
+        version: link:../crosschain-sdk/packages/widget
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -575,30 +575,6 @@ packages:
   '@ledgerhq/logs@6.17.0':
     resolution: {integrity: sha512-yra33g5q/AU7+PwAws+GaVpQGUuxnDREjVBnviJjcaJLVKuLzI4pnj8Bd3nY3fypM5k1yZEYKEXfUuGFUjP2+w==}
 
-  '@magi/core@file:vendor/magi-core-0.0.1.tgz':
-    resolution: {integrity: sha512-3AyRl2L2ZyMVyMrkkxbmBSq8AOOjZx1fFchscwaaDYi/VyKyBBX4o0pWRga4EdSu3VQwtleYdnstSDdLTQHXTQ==, tarball: file:vendor/magi-core-0.0.1.tgz}
-    version: 0.0.1
-
-  '@magi/sdk@file:vendor/magi-sdk-0.0.1.tgz':
-    resolution: {integrity: sha512-DUBxpX6EEuR8qDJ+PpV0QPnoivkJogs/ncQa9/SnqThhG+Fxlye3ga4MrHQJ9af4e261gLKp392Ob/zXdQby/Q==, tarball: file:vendor/magi-sdk-0.0.1.tgz}
-    version: 0.0.1
-    peerDependencies:
-      '@aioha/aioha': ^1.8.0
-    peerDependenciesMeta:
-      '@aioha/aioha':
-        optional: true
-
-  '@magi/widget@file:vendor/magi-widget-0.0.1.tgz':
-    resolution: {integrity: sha512-E6uR+bKO0nFoDo5rxINGUM+5dvFEe8VVlRckF/zFV8CId/eEPnHkrC9/ur98MieGzyUh0sxlnBgN9NjpNW7Cyw==, tarball: file:vendor/magi-widget-0.0.1.tgz}
-    version: 0.0.1
-    peerDependencies:
-      '@aioha/aioha': ^1.8.0
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
-    peerDependenciesMeta:
-      '@aioha/aioha':
-        optional: true
-
   '@metamask/json-rpc-engine@10.2.4':
     resolution: {integrity: sha512-voOnrTtkTwF2zcyNx2auFvZY9QTK7dADsE9xaCXO9tGpvfTEI3GIVyUryYay8t/lUiz5nhHGublTkhwntgvRHQ==}
     engines: {node: ^18.18 || >=20}
@@ -643,15 +619,6 @@ packages:
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
-
-  '@r2wc/core@1.3.1':
-    resolution: {integrity: sha512-x9nMthXsTjqr1alE+boX1Zuzqb6/oFi4wAOdWaWcWKcrwq9M/PATK74c3DFJfRnUOkYWPlsz0e4CsFBXJGStSA==}
-
-  '@r2wc/react-to-web-component@2.1.1':
-    resolution: {integrity: sha512-AXsIdjxK9ALv0ySWjVadUg3uJ5nS8L4H8eZMYaaWuM+9LNj9DP/r4+sMjI+6jZwb7/FqwxRPHQUq8yimQwBfOA==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
 
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
@@ -989,17 +956,10 @@ packages:
   base-x@5.0.1:
     resolution: {integrity: sha512-M7uio8Zt++eg3jPj+rHMfCC+IuygQHHCOU+IYsVtik6FWjuYpVt/+MRKcgsAMHh8mMFAwnB+Bs+mTrFiXjMzKg==}
 
-  base58-js@1.0.5:
-    resolution: {integrity: sha512-LkkAPP8Zu+c0SVNRTRVDyMfKVORThX+rCViget00xdgLRrKkClCTz1T7cIrpr69ShwV5XJuuoZvMvJ43yURwkA==}
-    engines: {node: '>= 8'}
-
   baseline-browser-mapping@2.10.20:
     resolution: {integrity: sha512-1AaXxEPfXT+GvTBJFuy4yXVHWJBXa4OdbIebGN/wX5DlsIkU0+wzGnd2lOzokSk51d5LUmqjgBLRLlypLUqInQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
-
-  bech32@2.0.0:
-    resolution: {integrity: sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==}
 
   bigi@1.4.2:
     resolution: {integrity: sha512-ddkU+dFIuEIW8lE7ZwdIAf2UPoM90eaprg5m3YXAVVTmKlqV/9BX4A2M8BOK2yOq6/VgZFVhK6QAxJebhlbhzw==}
@@ -1012,9 +972,6 @@ packages:
 
   bip66@1.1.5:
     resolution: {integrity: sha512-nemMHz95EmS38a26XbbdxIYj5csHd3RMP3H5bwQknX0WYHF01qhpufP42mLOwVICuH2JmhIhXiWs89MfUGL7Xw==}
-
-  bitcoin-address-validation@2.2.3:
-    resolution: {integrity: sha512-1uGCGl26Ye8JG5qcExtFLQfuib6qEZWNDo1ZlLlwp/z7ygUFby3IxolgEfgMGaC+LG9csbVASLcH8fRLv7DIOg==}
 
   bn.js@4.12.3:
     resolution: {integrity: sha512-fGTi3gxV/23FTYdAoUtLYp6qySe2KE3teyZitipKNRuVYcBkoP/bB3guXN/XVKUe9mxCHXnc9C4ocyz8OmgN0g==}
@@ -1855,9 +1812,6 @@ packages:
     engines: {node: '>= 0.10'}
     hasBin: true
 
-  sha256-uint8array@0.10.7:
-    resolution: {integrity: sha512-1Q6JQU4tX9NqsDGodej6pkrUVQVNapLZnvkwIhddH/JqzBZF1fSaxSWNY6sziXBE8aEa2twtGkXUrwzGeZCMpQ==}
-
   shiki@1.29.2:
     resolution: {integrity: sha512-njXuliz/cP+67jU2hukkxCNuH1yUi4QfdZZY+sMr5PPrIyXSu5iTb/qYC4BiWWB0vZ+7TbdvYUCeL23zpwCfbg==}
 
@@ -2570,25 +2524,6 @@ snapshots:
 
   '@ledgerhq/logs@6.17.0': {}
 
-  '@magi/core@file:vendor/magi-core-0.0.1.tgz': {}
-
-  '@magi/sdk@file:vendor/magi-sdk-0.0.1.tgz(@aioha/aioha@1.8.2(webextension-polyfill@0.12.0))':
-    dependencies:
-      '@magi/core': file:vendor/magi-core-0.0.1.tgz
-    optionalDependencies:
-      '@aioha/aioha': 1.8.2(webextension-polyfill@0.12.0)
-
-  '@magi/widget@file:vendor/magi-widget-0.0.1.tgz(@aioha/aioha@1.8.2(webextension-polyfill@0.12.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@magi/core': file:vendor/magi-core-0.0.1.tgz
-      '@magi/sdk': file:vendor/magi-sdk-0.0.1.tgz(@aioha/aioha@1.8.2(webextension-polyfill@0.12.0))
-      '@r2wc/react-to-web-component': 2.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      bitcoin-address-validation: 2.2.3
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    optionalDependencies:
-      '@aioha/aioha': 1.8.2(webextension-polyfill@0.12.0)
-
   '@metamask/json-rpc-engine@10.2.4':
     dependencies:
       '@metamask/rpc-errors': 7.0.3
@@ -2665,14 +2600,6 @@ snapshots:
   '@noble/hashes@1.4.0': {}
 
   '@noble/hashes@1.8.0': {}
-
-  '@r2wc/core@1.3.1': {}
-
-  '@r2wc/react-to-web-component@2.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@r2wc/core': 1.3.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
 
@@ -2981,11 +2908,7 @@ snapshots:
 
   base-x@5.0.1: {}
 
-  base58-js@1.0.5: {}
-
   baseline-browser-mapping@2.10.20: {}
-
-  bech32@2.0.0: {}
 
   bigi@1.4.2: {}
 
@@ -2998,12 +2921,6 @@ snapshots:
   bip66@1.1.5:
     dependencies:
       safe-buffer: 5.2.1
-
-  bitcoin-address-validation@2.2.3:
-    dependencies:
-      base58-js: 1.0.5
-      bech32: 2.0.0
-      sha256-uint8array: 0.10.7
 
   bn.js@4.12.3: {}
 
@@ -4208,8 +4125,6 @@ snapshots:
       inherits: 2.0.4
       safe-buffer: 5.2.1
       to-buffer: 1.2.2
-
-  sha256-uint8array@0.10.7: {}
 
   shiki@1.29.2:
     dependencies:

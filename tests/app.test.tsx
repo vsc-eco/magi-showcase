@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { App } from '../src/App';
 
-vi.mock('@magi/widget', () => ({
+vi.mock('@vsc.eco/crosschain-widget', () => ({
 	MagiQuickSwap: () => <div data-testid="magi-quick-swap" />
 }));
 

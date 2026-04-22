@@ -1,19 +1,8 @@
 import { useEffect, useState } from 'react';
 import { KeyTypes, Providers, type Aioha } from '@aioha/aioha';
-import { MagiQuickSwap } from '@magi/widget';
-import { MAINNET_CONFIG } from '@magi/sdk';
+import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
 import { createShowcaseAioha } from '../aioha';
 import { ConnectBar } from './ConnectBar';
-
-// Showcase-wide config: mainnet defaults plus a referral fee on
-// outbound BTC swaps routed through the widget here.
-const SHOWCASE_CONFIG = {
-	...MAINNET_CONFIG,
-	referral: {
-		beneficiary: 'hive:altera.app',
-		bps: 25
-	}
-};
 
 export function LiveWidget() {
 	const [aioha, setAioha] = useState<Aioha | null>(null);
@@ -64,7 +53,6 @@ export function LiveWidget() {
 					aioha={aioha}
 					username={username}
 					keyType={KeyTypes.Active}
-					config={SHOWCASE_CONFIG}
 					onSuccess={(tx) => setLastTx(tx)}
 				/>
 			)}

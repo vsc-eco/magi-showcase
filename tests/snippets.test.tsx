@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import type { Aioha } from '@aioha/aioha';
 
-vi.mock('@magi/widget', () => ({
+vi.mock('@vsc.eco/crosschain-widget', () => ({
 	MagiQuickSwap: () => null
 }));
 
@@ -19,7 +19,7 @@ describe('snippet: react-basic.tsx', () => {
 describe('snippet: webcomponent.html', () => {
 	it('registers <magi-quickswap>', async () => {
 		// The real webcomponent module imports the widget CSS which jsdom
-		// can't parse. Mock @magi/widget/webcomponent to register a stub
+		// can't parse. Mock @vsc.eco/crosschain-widget/webcomponent to register a stub
 		// element — the snippet's contract is that the tag name is defined.
 		if (!customElements.get('magi-quickswap')) {
 			class Stub extends HTMLElement {}

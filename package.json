@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@aioha/aioha": "^1.8.2",
-    "@magi/core": "file:vendor/magi-core-0.0.1.tgz",
-    "@magi/sdk": "file:vendor/magi-sdk-0.0.1.tgz",
-    "@magi/widget": "file:vendor/magi-widget-0.0.1.tgz",
+    "@vsc.eco/crosschain-core": "link:../crosschain-sdk/packages/core",
+    "@vsc.eco/crosschain-sdk": "link:../crosschain-sdk/packages/sdk",
+    "@vsc.eco/crosschain-widget": "link:../crosschain-sdk/packages/widget",
     "highlight.js": "^11.11.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -27,9 +27,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@magi/core": "file:vendor/magi-core-0.0.1.tgz",
-      "@magi/sdk": "file:vendor/magi-sdk-0.0.1.tgz",
-      "@magi/widget": "file:vendor/magi-widget-0.0.1.tgz"
+      "@vsc.eco/crosschain-core": "link:../crosschain-sdk/packages/core",
+      "@vsc.eco/crosschain-sdk": "link:../crosschain-sdk/packages/sdk",
+      "@vsc.eco/crosschain-widget": "link:../crosschain-sdk/packages/widget"
     }
   },
   "devDependencies": {

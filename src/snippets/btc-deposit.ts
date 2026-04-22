@@ -1,4 +1,4 @@
-import { createMagi } from '@magi/sdk';
+import { createMagi } from '@vsc.eco/crosschain-sdk';
 
 // BTC → HIVE/HBD: no Hive wallet connection needed. The user sends
 // BTC from any wallet; the mapping bot watches and delivers the

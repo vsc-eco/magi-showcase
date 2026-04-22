@@ -1,5 +1,5 @@
 import { KeyTypes, type Aioha } from '@aioha/aioha';
-import { MagiQuickSwap } from '@magi/widget';
+import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
 
 interface Props {
 	aioha: Aioha;

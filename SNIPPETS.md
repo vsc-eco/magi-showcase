@@ -9,7 +9,7 @@ Drop `<MagiQuickSwap>` into any React + Aioha app. Use this when you already hav
 <!-- snippet:react-basic.tsx -->
 ```tsx
 import { KeyTypes, type Aioha } from '@aioha/aioha';
-import { MagiQuickSwap } from '@magi/widget';
+import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
 
 interface Props {
 	aioha: Aioha;
@@ -40,7 +40,7 @@ For apps that aren't in React — plain HTML, Vue, Svelte, etc. The widget regis
 ```html
 <!-- Drop into any HTML page — no framework required beyond the import. -->
 <script type="module">
-	import '@magi/widget/webcomponent';
+	import '@vsc.eco/crosschain-widget/webcomponent';
 </script>
 
 <magi-quickswap id="swap"></magi-quickswap>
@@ -64,7 +64,7 @@ When you want the swap math and Hive op shapes but your app already owns a signe
 
 <!-- snippet:sdk-only.ts -->
 ```ts
-import { CoinAmount, createMagi } from '@magi/sdk';
+import { CoinAmount, createMagi } from '@vsc.eco/crosschain-sdk';
 
 // Bring-your-own signer. The SDK builds the ops; you broadcast them
 // via whatever signing path your app already owns.
@@ -90,7 +90,7 @@ The user sends BTC from any Bitcoin wallet; the mapping bot watches the deposit 
 
 <!-- snippet:btc-deposit.ts -->
 ```ts
-import { createMagi } from '@magi/sdk';
+import { createMagi } from '@vsc.eco/crosschain-sdk';
 
 // BTC → HIVE/HBD: no Hive wallet connection needed. The user sends
 // BTC from any wallet; the mapping bot watches and delivers the
