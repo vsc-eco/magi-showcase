@@ -11,24 +11,39 @@ vi.mock('@vsc.eco/crosschain-widget', () => ({
 	}
 }));
 
-vi.mock('@aioha/aioha', () => ({
-	Aioha: class {
-		registerKeychain() {}
-		registerHiveSigner() {}
-		registerHiveAuth() {}
-		loadAuth() { return false; }
-		getCurrentUser() { return null; }
-		getProviders() { return []; }
-		isLoggedIn() { return false; }
-		logout() {}
-		on() {}
-		off() {}
-	},
-	KeyTypes: { Active: 'active', Posting: 'posting' }
+// vi.mock hoists to the top of the module; any spies the factories close
+// over must be declared via vi.hoisted so the bindings exist when the
+// mock factories run.
+const { aiohaLogin, aiohaLogout, keychainFactory } = vi.hoisted(() => ({
+	aiohaLogin: vi.fn().mockResolvedValue({ success: true }),
+	aiohaLogout: vi.fn().mockResolvedValue(undefined),
+	keychainFactory: vi.fn((opts: { username: string }) =>
+		async () => ({ txId: `keychain-${opts.username}` })
+	)
 }));
 
-// Stable directSigner mock — a synchronous stand-in for the dhive-backed factory.
-// Returning the input lets us assert the factory was called with the form values.
+// Aioha mock — exposes a provider list so the provider picker renders.
+// login() is spied so we can assert it receives the provider the UI picks.
+vi.mock('@aioha/aioha', () => {
+	const instance = {
+		registerKeychain() {},
+		registerHiveAuth() {},
+		loadAuth() { return false; },
+		getCurrentUser() { return 'bob'; },
+		getProviders() { return ['keychain', 'hiveauth']; },
+		isLoggedIn() { return false; },
+		login: aiohaLogin,
+		logout: aiohaLogout,
+		on() {},
+		off() {}
+	};
+	return {
+		Aioha: class { constructor() { return instance; } },
+		KeyTypes: { Active: 'active', Posting: 'posting' }
+	};
+});
+
+// Direct signer factory — fake async import + throw on an obviously-bad WIF.
 vi.mock('../../src/directSigner', () => ({
 	makeDirectSigner: vi.fn((opts: { username: string; wif: string }) => {
 		if (opts.wif === 'bad-key') throw new Error('invalid checksum');
@@ -36,8 +51,17 @@ vi.mock('../../src/directSigner', () => ({
 	})
 }));
 
+// Keychain helper mock — keep it in lockstep with the real factory so the
+// widget gets a function back when the username is set.
+vi.mock('../../src/keychainSigner', () => ({
+	isKeychainAvailable: () => true,
+	makeKeychainSigner: keychainFactory
+}));
+
 beforeEach(() => {
 	widgetPropsLog.length = 0;
+	aiohaLogin.mockClear();
+	keychainFactory.mockClear();
 	globalThis.fetch = vi.fn(async () =>
 		new Response(
 			JSON.stringify({ data: { dex_pool_registry: [], dex_pool_liquidity: [] } }),
@@ -47,20 +71,48 @@ beforeEach(() => {
 });
 
 describe('LiveWidget', () => {
-	it('defaults to Aioha mode and shows the connect bar', () => {
+	it('defaults to Aioha mode, shows a provider picker, and renders the connect bar', async () => {
 		render(<LiveWidget />);
 		expect(screen.getByRole('tab', { name: /^aioha$/i })).toHaveAttribute('aria-selected', 'true');
 		expect(screen.getByRole('button', { name: /connect/i })).toBeInTheDocument();
-		expect(screen.getByText(/mainnet\. swaps are real/i)).toBeInTheDocument();
+		// Provider picker appears once the effect reports >1 registered providers.
+		const select = await screen.findByLabelText(/provider/i);
+		expect(select).toBeInTheDocument();
+		const options = Array.from(select.querySelectorAll('option')).map((o) => o.textContent);
+		expect(options).toEqual(['Keychain', 'HiveAuth']);
+	});
+
+	it('forwards the selected Aioha provider to aioha.login()', async () => {
+		render(<LiveWidget />);
+		const select = await screen.findByLabelText(/provider/i);
+		fireEvent.change(select, { target: { value: 'hiveauth' } });
+		vi.spyOn(window, 'prompt').mockReturnValue('bob');
+		fireEvent.click(screen.getByRole('button', { name: /connect/i }));
+		// login is async; flush microtasks.
+		await Promise.resolve();
+		expect(aiohaLogin).toHaveBeenCalledTimes(1);
+		expect(aiohaLogin.mock.calls[0][0]).toBe('hiveauth');
+	});
+
+	it('switches to Keychain mode and mounts the widget with onBroadcast once a username is set', async () => {
+		render(<LiveWidget />);
+		fireEvent.click(screen.getByRole('tab', { name: /keychain \(onbroadcast\)/i }));
+		expect(screen.getByText(/no aioha, no wif\./i)).toBeInTheDocument();
+		// Nothing rendered until username is typed.
+		expect(screen.queryByTestId('magi-quick-swap')).not.toBeInTheDocument();
+		fireEvent.change(screen.getByLabelText(/hive username/i), { target: { value: 'bob' } });
+		expect(screen.getByTestId('magi-quick-swap')).toBeInTheDocument();
+		const last = widgetPropsLog.at(-1)!;
+		expect(last.username).toBe('bob');
+		expect(last.aioha).toBeUndefined();
+		expect(typeof last.onBroadcast).toBe('function');
+		expect(keychainFactory).toHaveBeenCalledWith({ username: 'bob' });
 	});
 
 	it('switches to direct-signer mode and hides the widget until both fields are filled', () => {
 		render(<LiveWidget />);
 		fireEvent.click(screen.getByRole('tab', { name: /direct signer/i }));
 		expect(screen.getByText(/testing only\./i)).toBeInTheDocument();
-		expect(screen.getByLabelText(/hive username/i)).toBeInTheDocument();
-		expect(screen.getByLabelText(/active wif/i)).toBeInTheDocument();
-		// Nothing filled → widget not mounted, explanatory notice shown instead.
 		expect(screen.queryByTestId('magi-quick-swap')).not.toBeInTheDocument();
 		expect(screen.getByText(/enter your hive username and active wif/i)).toBeInTheDocument();
 	});
@@ -68,12 +120,11 @@ describe('LiveWidget', () => {
 	it('mounts the widget with onBroadcast (not aioha) once both direct-signer fields are set', async () => {
 		render(<LiveWidget />);
 		fireEvent.click(screen.getByRole('tab', { name: /direct signer/i }));
-		fireEvent.change(screen.getByLabelText(/hive username/i), { target: { value: 'tibfox' } });
+		fireEvent.change(screen.getByLabelText(/hive username/i), { target: { value: 'bob' } });
 		fireEvent.change(screen.getByLabelText(/active wif/i), { target: { value: '5Ktestkey' } });
-		// The signer factory is dynamically imported — await its async resolve.
 		expect(await screen.findByTestId('magi-quick-swap')).toBeInTheDocument();
 		const last = widgetPropsLog.at(-1)!;
-		expect(last.username).toBe('tibfox');
+		expect(last.username).toBe('bob');
 		expect(last.aioha).toBeUndefined();
 		expect(typeof last.onBroadcast).toBe('function');
 	});
@@ -81,9 +132,8 @@ describe('LiveWidget', () => {
 	it('surfaces invalid-WIF errors from makeDirectSigner without crashing', async () => {
 		render(<LiveWidget />);
 		fireEvent.click(screen.getByRole('tab', { name: /direct signer/i }));
-		fireEvent.change(screen.getByLabelText(/hive username/i), { target: { value: 'tibfox' } });
+		fireEvent.change(screen.getByLabelText(/hive username/i), { target: { value: 'bob' } });
 		fireEvent.change(screen.getByLabelText(/active wif/i), { target: { value: 'bad-key' } });
-		// Dynamic factory load + re-render before the try/catch fires.
 		expect(await screen.findByText(/key invalid: invalid checksum/i)).toBeInTheDocument();
 		expect(screen.queryByTestId('magi-quick-swap')).not.toBeInTheDocument();
 	});
