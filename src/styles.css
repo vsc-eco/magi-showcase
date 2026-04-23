@@ -259,104 +259,11 @@ button:hover { background: var(--page-accent-hover); }
 	color: #f87171;
 }
 .live-widget__direct-error a { color: inherit; text-decoration: underline; }
-.live-widget__provider-select {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	margin-bottom: 12px;
-	font-size: 13px;
-	color: var(--page-text-secondary);
-}
-.live-widget__provider-select select {
-	font-family: inherit;
-	font-size: 14px;
-	color: var(--page-text);
-	background: rgba(0, 0, 0, 0.3);
-	border: 1px solid var(--glass-border);
-	border-radius: 8px;
-	padding: 6px 10px;
-	outline: none;
-}
-.live-widget__provider-select select:focus { border-color: var(--page-accent); }
-
-.hiveauth-modal {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.65);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 16px;
-	z-index: 1000;
-	backdrop-filter: blur(6px);
-	-webkit-backdrop-filter: blur(6px);
-}
-.hiveauth-modal__card {
-	width: 100%;
-	max-width: 480px;
-	background: rgba(24, 28, 35, 0.95);
-	border: 1px solid var(--glass-border);
-	border-radius: 12px;
-	padding: 24px;
-	color: var(--page-text);
-	text-align: left;
-	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-.hiveauth-modal__title {
+.live-widget__provider-note {
 	margin: 0 0 12px;
-	font-size: 18px;
-	font-weight: 600;
+	font-size: 13px;
+	color: var(--page-text-muted);
 }
-.hiveauth-modal__body {
-	margin: 0 0 16px;
-	font-size: 14px;
-	color: var(--page-text-secondary);
-	line-height: 1.5;
-}
-.hiveauth-modal__qr {
-	display: flex;
-	justify-content: center;
-	padding: 12px;
-	background: #fff;
-	border-radius: 8px;
-	margin-bottom: 12px;
-}
-.hiveauth-modal__link {
-	display: block;
-	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-	font-size: 11px;
-	color: var(--page-accent);
-	background: rgba(0, 0, 0, 0.35);
-	border: 1px solid var(--glass-border);
-	border-radius: 8px;
-	padding: 8px 10px;
-	word-break: break-all;
-	text-decoration: none;
-	margin-bottom: 16px;
-	line-height: 1.5;
-	max-height: 64px;
-	overflow: auto;
-}
-.hiveauth-modal__link:hover,
-.hiveauth-modal__link:focus { text-decoration: underline; }
-.hiveauth-modal__actions { display: flex; gap: 8px; justify-content: flex-end; }
-.hiveauth-modal__actions button {
-	font-family: inherit;
-	font-size: 14px;
-	font-weight: 500;
-	padding: 8px 16px;
-	border-radius: 8px;
-	border: 1px solid var(--glass-border);
-	background: var(--glass-bg);
-	color: var(--page-text);
-	cursor: pointer;
-}
-.hiveauth-modal__actions button:first-child {
-	background: var(--page-accent);
-	border-color: var(--page-accent);
-	color: #fff;
-}
-.hiveauth-modal__actions button:hover { opacity: 0.9; }
 
 .footer {
 	margin-top: 80px;

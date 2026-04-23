@@ -1,33 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import { KeyTypes, Providers, type Aioha } from '@aioha/aioha';
 import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
-import { QRCodeSVG } from 'qrcode.react';
 import { createShowcaseAioha } from '../aioha';
 import type { makeDirectSigner as MakeDirectSigner } from '../directSigner';
 import { isKeychainAvailable, makeKeychainSigner } from '../keychainSigner';
 import { ConnectBar } from './ConnectBar';
 
 type SignerMode = 'aioha' | 'keychain' | 'direct';
-type AiohaProvider = 'keychain' | 'hiveauth';
-
-const PROVIDER_LABELS: Record<AiohaProvider, string> = {
-	keychain: 'Keychain',
-	hiveauth: 'HiveAuth'
-};
 
 export function LiveWidget() {
 	const [mode, setMode] = useState<SignerMode>('aioha');
 	const [aioha, setAioha] = useState<Aioha | null>(null);
 	const [username, setUsername] = useState<string | undefined>(undefined);
 	const [lastTx, setLastTx] = useState<string | null>(null);
-	const [aiohaProvider, setAiohaProvider] = useState<AiohaProvider>('keychain');
-	const [availableProviders, setAvailableProviders] = useState<AiohaProvider[]>([]);
 
 	const [keychainUsername, setKeychainUsername] = useState('');
 	const [keychainInstalled, setKeychainInstalled] = useState(() => isKeychainAvailable());
-
-	const [hiveAuthPrompt, setHiveAuthPrompt] = useState<{ url: string; cancel: () => void } | null>(null);
-	const [hiveAuthCopied, setHiveAuthCopied] = useState(false);
 
 	const [directUsername, setDirectUsername] = useState('');
 	const [directWif, setDirectWif] = useState('');
@@ -40,14 +28,6 @@ export function LiveWidget() {
 			setUsername(instance.getCurrentUser() ?? undefined);
 		}
 		setAioha(instance);
-		// Clamp the provider dropdown to what Aioha actually registered.
-		const provs = (instance.getProviders() as string[]).filter(
-			(p): p is AiohaProvider => p === 'keychain' || p === 'hiveauth'
-		);
-		setAvailableProviders(provs);
-		if (provs.length && !provs.includes('keychain')) {
-			setAiohaProvider(provs[0]);
-		}
 	}, []);
 
 	// Poll once for late-loading Keychain so the warning clears without a
@@ -72,52 +52,15 @@ export function LiveWidget() {
 		if (!aioha) return;
 		const user = window.prompt('Hive username:');
 		if (!user) return;
-		// For HiveAuth, capture the `has://auth_req/...` URL the provider
-		// hands us via cbWait and surface it in a modal so the user can
-		// tap (mobile) or copy (desktop) it to approve the auth request.
-		const hiveauthOpts =
-			aiohaProvider === 'hiveauth'
-				? {
-						hiveauth: {
-							cbWait: (url: string, _evt: unknown, cancel: () => void) => {
-								setHiveAuthCopied(false);
-								setHiveAuthPrompt({ url, cancel });
-							}
-						}
-					}
-				: undefined;
-		try {
-			const res = await aioha.login(aiohaProvider as Providers, user, {
-				msg: 'Sign in to Magi SDK showcase',
-				keyType: KeyTypes.Posting,
-				...hiveauthOpts
-			});
-			if (res.success) {
-				setUsername(aioha.getCurrentUser() ?? user);
-			} else {
-				alert(`Login failed: ${res.error}`);
-			}
-		} finally {
-			// Always clear — the prompt is scoped to this single login attempt.
-			setHiveAuthPrompt(null);
+		const res = await aioha.login(Providers.Keychain, user, {
+			msg: 'Sign in to Magi SDK showcase',
+			keyType: KeyTypes.Posting
+		});
+		if (res.success) {
+			setUsername(aioha.getCurrentUser() ?? user);
+		} else {
+			alert(`Login failed: ${res.error}`);
 		}
-	}
-
-	async function copyHiveAuthUrl() {
-		if (!hiveAuthPrompt) return;
-		try {
-			await navigator.clipboard.writeText(hiveAuthPrompt.url);
-			setHiveAuthCopied(true);
-			setTimeout(() => setHiveAuthCopied(false), 1500);
-		} catch {
-			// Clipboard permission denied — user can still tap/long-press.
-		}
-	}
-
-	function cancelHiveAuth() {
-		if (!hiveAuthPrompt) return;
-		hiveAuthPrompt.cancel();
-		setHiveAuthPrompt(null);
 	}
 
 	async function disconnect() {
@@ -184,19 +127,9 @@ export function LiveWidget() {
 			</div>
 			{isAioha && (
 				<>
-					{availableProviders.length > 1 && (
-						<label className="live-widget__provider-select">
-							<span>Provider</span>
-							<select
-								value={aiohaProvider}
-								onChange={(e) => setAiohaProvider(e.target.value as AiohaProvider)}
-							>
-								{availableProviders.map((p) => (
-									<option key={p} value={p}>{PROVIDER_LABELS[p]}</option>
-								))}
-							</select>
-						</label>
-					)}
+					<p className="live-widget__provider-note">
+						For simplicity we use Keychain as a fixed provider via Aioha.
+					</p>
 					<ConnectBar username={username} onConnect={connect} onDisconnect={disconnect} />
 				</>
 			)}
@@ -310,45 +243,6 @@ export function LiveWidget() {
 						<code>{lastTx}</code>
 					</a>
 				</p>
-			)}
-			{hiveAuthPrompt && (
-				<div
-					className="hiveauth-modal"
-					role="dialog"
-					aria-modal="true"
-					aria-labelledby="hiveauth-modal-title"
-					onClick={cancelHiveAuth}
-				>
-					<div className="hiveauth-modal__card" onClick={(e) => e.stopPropagation()}>
-						<h3 id="hiveauth-modal-title" className="hiveauth-modal__title">
-							HiveAuth authentication
-						</h3>
-						<p className="hiveauth-modal__body">
-							Scan the QR code with your HiveAuth-compatible mobile wallet
-							(Hive Keychain mobile, HiveAuth, etc.). On mobile, tap the link
-							below to open the wallet directly.
-						</p>
-						<div className="hiveauth-modal__qr" aria-hidden="true">
-							<QRCodeSVG value={hiveAuthPrompt.url} size={220} marginSize={2} />
-						</div>
-						<a
-							className="hiveauth-modal__link"
-							href={hiveAuthPrompt.url}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{hiveAuthPrompt.url}
-						</a>
-						<div className="hiveauth-modal__actions">
-							<button type="button" onClick={copyHiveAuthUrl}>
-								{hiveAuthCopied ? 'Copied!' : 'Copy link'}
-							</button>
-							<button type="button" onClick={cancelHiveAuth}>
-								Cancel
-							</button>
-						</div>
-					</div>
-				</div>
 			)}
 		</section>
 	);
