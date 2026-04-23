@@ -4,6 +4,7 @@ import webcomp from '../snippets/webcomponent.html?highlight';
 import sdk from '../snippets/sdk-only.ts?highlight';
 import btc from '../snippets/btc-deposit.ts?highlight';
 import directSigner from '../snippets/direct-signer.tsx?highlight';
+import keychain from '../snippets/keychain.tsx?highlight';
 
 interface Tab {
 	id: string;
@@ -42,6 +43,12 @@ const TABS: Tab[] = [
 		label: 'Direct signer',
 		blurb: 'Skip Aioha entirely. The onBroadcast prop lets you plug in any signer — here @hiveio/dhive with a raw active WIF. Use for PeakD / Keychain-only apps or CLI/backend integrations; never feed a user-typed key into a browser widget.',
 		snippet: directSigner
+	},
+	{
+		id: 'keychain',
+		label: 'Keychain',
+		blurb: "Same onBroadcast hook, backed by window.hive_keychain.requestBroadcast — zero Aioha, zero private keys in the page. The user confirms the swap in the Keychain extension popup; the widget resolves on the tx id the extension returns.",
+		snippet: keychain
 	}
 ];
 

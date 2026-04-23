@@ -1,6 +1,6 @@
 # Magi SDK — integration snippets
 
-Five integration modes, each backed by a type-checked file in `src/snippets/`. The code blocks below are **generated** from those files by `pnpm sync-snippets`; don't edit them by hand. The prose between markers is maintained manually.
+Six integration modes, each backed by a type-checked file in `src/snippets/`. The code blocks below are **generated** from those files by `pnpm sync-snippets`; don't edit them by hand. The prose between markers is maintained manually.
 
 ## React
 
@@ -151,3 +151,74 @@ export function DirectSigner({ username, activeWif }: Props) {
 }
 ```
 <!-- /snippet:direct-signer.tsx -->
+
+## Keychain
+
+Same `onBroadcast` hook, but signing runs through the Hive Keychain browser extension — no Aioha, no private keys in the page. The user approves the swap in Keychain's popup; the callback resolves once the extension returns a tx id. The only difference from the dhive snippet above is the body of the `onBroadcast` callback.
+
+<!-- snippet:keychain.tsx -->
+```tsx
+import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
+
+// Minimal typing for the Keychain extension's globally-injected API.
+// In a real app you'd usually pull this from @hiveio/keychain-sdk or
+// declare it in a shared globals.d.ts.
+interface KeychainResponse {
+	success: boolean;
+	result?: { id: string };
+	message?: string;
+}
+interface HiveKeychain {
+	requestBroadcast(
+		account: string,
+		operations: unknown[],
+		key: 'Active' | 'Posting',
+		callback: (response: KeychainResponse) => void
+	): void;
+}
+declare global {
+	interface Window { hive_keychain?: HiveKeychain }
+}
+
+interface Props {
+	username: string;
+}
+
+/**
+ * MagiQuickSwap driven by the Hive Keychain browser extension — no
+ * Aioha needed. Same integration path as the `@hiveio/dhive` direct
+ * signer; only the callback body differs. The user approves the
+ * transaction in the Keychain popup; the callback resolves once the
+ * extension posts a tx id back.
+ */
+export function KeychainSigner({ username }: Props) {
+	return (
+		<MagiQuickSwap
+			username={username}
+			onBroadcast={(ops) =>
+				new Promise((resolve, reject) => {
+					if (!window.hive_keychain) {
+						reject(new Error('Hive Keychain extension not installed'));
+						return;
+					}
+					window.hive_keychain.requestBroadcast(
+						username,
+						ops as unknown[],
+						'Active', // transfers require active authority
+						(res) => {
+							if (res.success && res.result?.id) {
+								resolve({ txId: res.result.id });
+							} else {
+								reject(new Error(res.message ?? 'Keychain broadcast failed'));
+							}
+						}
+					);
+				})
+			}
+			onSuccess={(txId) => console.log('Swap broadcast:', txId)}
+			onError={(err) => console.error('Swap failed:', err)}
+		/>
+	);
+}
+```
+<!-- /snippet:keychain.tsx -->
