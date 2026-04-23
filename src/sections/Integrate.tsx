@@ -3,6 +3,7 @@ import react from '../snippets/react-basic.tsx?highlight';
 import webcomp from '../snippets/webcomponent.html?highlight';
 import sdk from '../snippets/sdk-only.ts?highlight';
 import btc from '../snippets/btc-deposit.ts?highlight';
+import directSigner from '../snippets/direct-signer.tsx?highlight';
 
 interface Tab {
 	id: string;
@@ -35,6 +36,12 @@ const TABS: Tab[] = [
 		label: 'BTC deposit',
 		blurb: 'BTC → HIVE or HBD without any wallet connection. Show the user a generated deposit address; the mapping bot delivers the output to the Hive account you name.',
 		snippet: btc
+	},
+	{
+		id: 'direct-signer',
+		label: 'Direct signer',
+		blurb: 'Skip Aioha entirely. The onBroadcast prop lets you plug in any signer — here @hiveio/dhive with a raw active WIF. Use for PeakD / Keychain-only apps or CLI/backend integrations; never feed a user-typed key into a browser widget.',
+		snippet: directSigner
 	}
 ];
 

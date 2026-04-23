@@ -16,6 +16,9 @@ importers:
       '@aioha/aioha':
         specifier: ^1.8.2
         version: 1.8.2(webextension-polyfill@0.12.0)
+      '@hiveio/dhive':
+        specifier: ^1.3.2
+        version: 1.3.6
       '@vsc.eco/crosschain-core':
         specifier: link:../crosschain-sdk/packages/core
         version: link:../crosschain-sdk/packages/core

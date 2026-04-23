@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@aioha/aioha": "^1.8.2",
+    "@hiveio/dhive": "^1.3.2",
     "@vsc.eco/crosschain-core": "link:../crosschain-sdk/packages/core",
     "@vsc.eco/crosschain-sdk": "link:../crosschain-sdk/packages/sdk",
     "@vsc.eco/crosschain-widget": "link:../crosschain-sdk/packages/widget",

@@ -1,6 +1,6 @@
 # Magi SDK — integration snippets
 
-Four integration modes, each backed by a type-checked file in `src/snippets/`. The code blocks below are **generated** from those files by `pnpm sync-snippets`; don't edit them by hand. The prose between markers is maintained manually.
+Five integration modes, each backed by a type-checked file in `src/snippets/`. The code blocks below are **generated** from those files by `pnpm sync-snippets`; don't edit them by hand. The prose between markers is maintained manually.
 
 ## React
 
@@ -40,7 +40,7 @@ For apps that aren't in React — plain HTML, Vue, Svelte, etc. The widget regis
 ```html
 <!-- Drop into any HTML page — no framework required beyond the import. -->
 <script type="module">
-	import '@vsc.eco/crosschain-widget/webcomponent';
+	import '@magi/widget/webcomponent';
 </script>
 
 <magi-quickswap id="swap"></magi-quickswap>
@@ -106,3 +106,48 @@ export async function getDepositAddress(recipient: string) {
 }
 ```
 <!-- /snippet:btc-deposit.ts -->
+
+## Direct signer
+
+Skip Aioha entirely: the widget's `onBroadcast` prop takes precedence over `aioha`, letting you plug in any signer — here `@hiveio/dhive` with a raw active WIF. The widget still builds the ops, simulates, and tightens `rc_limit`; your callback only signs and broadcasts. Useful for PeakD / Keychain-only apps and for CLI or backend automation. **Never** feed a user-typed private key into a browser widget — load keys from env / secret store in a trusted context only.
+
+<!-- snippet:direct-signer.tsx -->
+```tsx
+import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
+import { Client, PrivateKey, type Operation } from '@hiveio/dhive';
+
+interface Props {
+	username: string;
+	/** Active-authority WIF. Never hard-code this; load from env / secret store. */
+	activeWif: string;
+}
+
+/**
+ * Drop-in MagiQuickSwap integration that bypasses Aioha entirely and signs
+ * ops with a private key via @hiveio/dhive. Suitable for non-Aioha hosts
+ * (PeakD, Keychain-only apps) or CLI / backend integrations.
+ */
+export function DirectSigner({ username, activeWif }: Props) {
+	const client = new Client('https://api.hive.blog');
+	const key = PrivateKey.fromString(activeWif);
+
+	return (
+		<MagiQuickSwap
+			username={username}
+			// onBroadcast takes precedence over `aioha` — the widget still
+			// handles build + simulate + rc_limit tightening and then hands
+			// the finalized ops to your signer.
+			onBroadcast={async (ops) => {
+				const result = await client.broadcast.sendOperations(
+					ops as Operation[],
+					key
+				);
+				return { txId: result.id };
+			}}
+			onSuccess={(txId) => console.log('Swap broadcast:', txId)}
+			onError={(err) => console.error('Swap failed:', err)}
+		/>
+	);
+}
+```
+<!-- /snippet:direct-signer.tsx -->
