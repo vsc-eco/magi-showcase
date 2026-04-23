@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { KeyTypes, Providers, type Aioha } from '@aioha/aioha';
 import { MagiQuickSwap } from '@vsc.eco/crosschain-widget';
+import { QRCodeSVG } from 'qrcode.react';
 import { createShowcaseAioha } from '../aioha';
 import type { makeDirectSigner as MakeDirectSigner } from '../directSigner';
 import { isKeychainAvailable, makeKeychainSigner } from '../keychainSigner';
@@ -323,10 +324,13 @@ export function LiveWidget() {
 							HiveAuth authentication
 						</h3>
 						<p className="hiveauth-modal__body">
-							Open this link in your HiveAuth-compatible mobile wallet (Hive
-							Keychain mobile, HiveAuth, etc.) to approve the sign-in. On
-							desktop, copy the link and paste it on your phone.
+							Scan the QR code with your HiveAuth-compatible mobile wallet
+							(Hive Keychain mobile, HiveAuth, etc.). On mobile, tap the link
+							below to open the wallet directly.
 						</p>
+						<div className="hiveauth-modal__qr" aria-hidden="true">
+							<QRCodeSVG value={hiveAuthPrompt.url} size={220} marginSize={2} />
+						</div>
 						<a
 							className="hiveauth-modal__link"
 							href={hiveAuthPrompt.url}

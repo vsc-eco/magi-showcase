@@ -313,19 +313,29 @@ button:hover { background: var(--page-accent-hover); }
 	color: var(--page-text-secondary);
 	line-height: 1.5;
 }
+.hiveauth-modal__qr {
+	display: flex;
+	justify-content: center;
+	padding: 12px;
+	background: #fff;
+	border-radius: 8px;
+	margin-bottom: 12px;
+}
 .hiveauth-modal__link {
 	display: block;
 	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-	font-size: 12px;
+	font-size: 11px;
 	color: var(--page-accent);
 	background: rgba(0, 0, 0, 0.35);
 	border: 1px solid var(--glass-border);
 	border-radius: 8px;
-	padding: 10px 12px;
+	padding: 8px 10px;
 	word-break: break-all;
 	text-decoration: none;
 	margin-bottom: 16px;
 	line-height: 1.5;
+	max-height: 64px;
+	overflow: auto;
 }
 .hiveauth-modal__link:hover,
 .hiveauth-modal__link:focus { text-decoration: underline; }
