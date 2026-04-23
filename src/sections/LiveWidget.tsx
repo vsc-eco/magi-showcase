@@ -112,8 +112,8 @@ export function LiveWidget() {
 					<div className="live-widget__direct-warning">
 						<strong>Testing only.</strong> Your private key stays in this tab's
 						memory and is passed directly to <code>@hiveio/dhive</code> for
-						signing. Never paste a real mainnet active key here unless you
-						understand the trust model — close the tab when done.
+						signing. Never paste an active key here for a real-life account
+						unless you understand the trust model — close the tab when done.
 					</div>
 					<label className="live-widget__direct-label">
 						<span>Hive username</span>
