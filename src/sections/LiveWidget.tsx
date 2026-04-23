@@ -121,7 +121,7 @@ export function LiveWidget() {
 							type="text"
 							value={directUsername}
 							onChange={(e) => setDirectUsername(e.target.value)}
-							placeholder="e.g. tibfox"
+							placeholder="e.g. bob"
 							autoComplete="off"
 							spellCheck={false}
 						/>
