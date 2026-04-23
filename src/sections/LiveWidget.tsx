@@ -25,6 +25,9 @@ export function LiveWidget() {
 	const [keychainUsername, setKeychainUsername] = useState('');
 	const [keychainInstalled, setKeychainInstalled] = useState(() => isKeychainAvailable());
 
+	const [hiveAuthPrompt, setHiveAuthPrompt] = useState<{ url: string; cancel: () => void } | null>(null);
+	const [hiveAuthCopied, setHiveAuthCopied] = useState(false);
+
 	const [directUsername, setDirectUsername] = useState('');
 	const [directWif, setDirectWif] = useState('');
 	const [directWifError, setDirectWifError] = useState<string | null>(null);
@@ -68,15 +71,52 @@ export function LiveWidget() {
 		if (!aioha) return;
 		const user = window.prompt('Hive username:');
 		if (!user) return;
-		const res = await aioha.login(aiohaProvider as Providers, user, {
-			msg: 'Sign in to Magi SDK showcase',
-			keyType: KeyTypes.Posting
-		});
-		if (res.success) {
-			setUsername(aioha.getCurrentUser() ?? user);
-		} else {
-			alert(`Login failed: ${res.error}`);
+		// For HiveAuth, capture the `has://auth_req/...` URL the provider
+		// hands us via cbWait and surface it in a modal so the user can
+		// tap (mobile) or copy (desktop) it to approve the auth request.
+		const hiveauthOpts =
+			aiohaProvider === 'hiveauth'
+				? {
+						hiveauth: {
+							cbWait: (url: string, _evt: unknown, cancel: () => void) => {
+								setHiveAuthCopied(false);
+								setHiveAuthPrompt({ url, cancel });
+							}
+						}
+					}
+				: undefined;
+		try {
+			const res = await aioha.login(aiohaProvider as Providers, user, {
+				msg: 'Sign in to Magi SDK showcase',
+				keyType: KeyTypes.Posting,
+				...hiveauthOpts
+			});
+			if (res.success) {
+				setUsername(aioha.getCurrentUser() ?? user);
+			} else {
+				alert(`Login failed: ${res.error}`);
+			}
+		} finally {
+			// Always clear — the prompt is scoped to this single login attempt.
+			setHiveAuthPrompt(null);
 		}
+	}
+
+	async function copyHiveAuthUrl() {
+		if (!hiveAuthPrompt) return;
+		try {
+			await navigator.clipboard.writeText(hiveAuthPrompt.url);
+			setHiveAuthCopied(true);
+			setTimeout(() => setHiveAuthCopied(false), 1500);
+		} catch {
+			// Clipboard permission denied — user can still tap/long-press.
+		}
+	}
+
+	function cancelHiveAuth() {
+		if (!hiveAuthPrompt) return;
+		hiveAuthPrompt.cancel();
+		setHiveAuthPrompt(null);
 	}
 
 	async function disconnect() {
@@ -269,6 +309,42 @@ export function LiveWidget() {
 						<code>{lastTx}</code>
 					</a>
 				</p>
+			)}
+			{hiveAuthPrompt && (
+				<div
+					className="hiveauth-modal"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="hiveauth-modal-title"
+					onClick={cancelHiveAuth}
+				>
+					<div className="hiveauth-modal__card" onClick={(e) => e.stopPropagation()}>
+						<h3 id="hiveauth-modal-title" className="hiveauth-modal__title">
+							HiveAuth authentication
+						</h3>
+						<p className="hiveauth-modal__body">
+							Open this link in your HiveAuth-compatible mobile wallet (Hive
+							Keychain mobile, HiveAuth, etc.) to approve the sign-in. On
+							desktop, copy the link and paste it on your phone.
+						</p>
+						<a
+							className="hiveauth-modal__link"
+							href={hiveAuthPrompt.url}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{hiveAuthPrompt.url}
+						</a>
+						<div className="hiveauth-modal__actions">
+							<button type="button" onClick={copyHiveAuthUrl}>
+								{hiveAuthCopied ? 'Copied!' : 'Copy link'}
+							</button>
+							<button type="button" onClick={cancelHiveAuth}>
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>
 			)}
 		</section>
 	);

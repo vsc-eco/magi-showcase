@@ -94,6 +94,42 @@ describe('LiveWidget', () => {
 		expect(aiohaLogin.mock.calls[0][0]).toBe('hiveauth');
 	});
 
+	it('opens a HiveAuth URL popup when aioha invokes cbWait', async () => {
+		// Real aioha traps HiveAuth cancel/failure internally and resolves
+		// login() with { success: false } — mirror that so no promise leaks.
+		let resolveLogin!: (value: { success: boolean; error?: string }) => void;
+		aiohaLogin.mockImplementationOnce((_provider, _user, opts) => {
+			setTimeout(() => {
+				opts.hiveauth?.cbWait('has://auth_req/abc123', {}, () => {
+					resolveLogin({ success: false, error: 'cancelled' });
+				});
+			}, 0);
+			return new Promise((resolve) => {
+				resolveLogin = resolve;
+			});
+		});
+		// alert() isn't implemented in jsdom; no-op it for the failure branch.
+		vi.spyOn(window, 'alert').mockImplementation(() => {});
+
+		render(<LiveWidget />);
+		const select = await screen.findByLabelText(/provider/i);
+		fireEvent.change(select, { target: { value: 'hiveauth' } });
+		vi.spyOn(window, 'prompt').mockReturnValue('bob');
+		fireEvent.click(screen.getByRole('button', { name: /connect/i }));
+
+		const modal = await screen.findByRole('dialog');
+		expect(modal).toBeInTheDocument();
+		const link = screen.getByRole('link', { name: /has:\/\/auth_req\/abc123/i });
+		expect(link.getAttribute('href')).toBe('has://auth_req/abc123');
+
+		// Cancel closes the modal and triggers the aioha cancel callback,
+		// which resolves login with {success:false}. Wait for the resulting
+		// finally block to clear the prompt state.
+		fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
+		await screen.findByRole('tab', { name: /^aioha$/i }); // settle microtasks
+		expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+	});
+
 	it('switches to Keychain mode and mounts the widget with onBroadcast once a username is set', async () => {
 		render(<LiveWidget />);
 		fireEvent.click(screen.getByRole('tab', { name: /keychain \(onbroadcast\)/i }));
